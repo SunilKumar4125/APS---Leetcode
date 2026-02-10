@@ -1,15 +1,22 @@
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 class Solution {
     public boolean containsNearbyDuplicate(int[] nums, int k) {
-        HashMap<Integer, Integer> map = new HashMap<>();
+        Set<Integer> set = new HashSet<>();
+        
         for (int i = 0; i < nums.length; i++) {
-            if (map.containsKey(nums[i])) {
-                if (i - map.get(nums[i]) <= k) {
-                    return true;
-                }
+            // Remove the element that is now outside the window
+            if (i > k) {
+                set.remove(nums[i - k - 1]);
             }
-            map.put(nums[i], i);
+            
+            // Try to add the current element. If it fails, a duplicate exists.
+            if (!set.add(nums[i])) {
+                return true;
+            }
         }
+        
         return false;
     }
 }
