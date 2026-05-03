@@ -1,28 +1,17 @@
-class Solution {
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
-        List<List<Integer>> adj = new ArrayList<>();
-        for (int i = 0; i < numCourses; i++) adj.add(new ArrayList<>());
-
-        for (int[] pre : prerequisites)
-            adj.get(pre[1]).add(pre[0]);
-
-        boolean[] vis = new boolean[numCourses];
-        boolean[] path = new boolean[numCourses];
-
-        for (int i = 0; i < numCourses; i++)
-            if (!vis[i] && dfs(i, adj, vis, path)) return false;
-
-        return true;
-    }
-
-    private boolean dfs(int node, List<List<Integer>> adj, boolean[] vis, boolean[] path) {
-        vis[node] = path[node] = true;
-
-        for (int next : adj.get(node))
-            if (!vis[next] && dfs(next, adj, vis, path)) return true;
-            else if (path[next]) return true;
-            
-        path[node] = false;
-        return false;
-    }
+import java.util.*;
+class Solution{
+public boolean canFinish(int n,int[][] p){
+List<List<Integer>> g=new ArrayList<>();
+int[] in=new int[n];
+for(int i=0;i<n;i++)g.add(new ArrayList<>());
+for(int[] a:p){g.get(a[1]).add(a[0]);in[a[0]]++;}
+Queue<Integer> q=new LinkedList<>();
+for(int i=0;i<n;i++)if(in[i]==0)q.add(i);
+int c=0;
+while(!q.isEmpty()){
+int x=q.poll();c++;
+for(int y:g.get(x))if(--in[y]==0)q.add(y);
+}
+return c==n;
+}
 }
